@@ -1,0 +1,3 @@
+# CMake Superbuild experiments
+
+Testing ExternalProject based superbuild...
