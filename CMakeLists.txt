@@ -27,7 +27,11 @@ project(SuperbuildTest)
 include(ExternalProject)
 set(installDir ${CMAKE_INSTALL_PREFIX})
 
+# Options
 set(NUM_BUILD_JOBS 4 CACHE INT "Number of build jobs '-j <n>'")
+set(BUILD_EMBREE_VERSION "3.5.2" CACHE STRING "Which version of Embree to build?")
+set(BUILD_OSPRAY_BRANCH "devel" CACHE STRING "Which branch of OSPRay to build?")
+
 set(DEFAULT_BUILD_COMMAND make -j ${NUM_BUILD_JOBS})
 
 ## ISPC ##
@@ -65,7 +69,7 @@ ExternalProject_Add(tbb
 ExternalProject_Add(embree
   PREFIX embree
   INSTALL_DIR ${installDir}/embree
-  URL "https://github.com/embree/embree/archive/v3.5.2.zip"
+  URL "https://github.com/embree/embree/archive/v${BUILD_EMBREE_VERSION}.zip"
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -DEMBREE_TUTORIALS=OFF
@@ -87,7 +91,7 @@ ExternalProject_Add(ospray
   URL "https://github.com/ospray/ospray/archive/devel.zip"
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-    -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-3.5.2
+    -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-${BUILD_EMBREE_VERSION}
     -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
     -DCMAKE_BUILD_TYPE=Release
   BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
