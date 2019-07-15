@@ -28,7 +28,7 @@ include(ExternalProject)
 set(installDir ${CMAKE_INSTALL_PREFIX})
 
 set(NUM_BUILD_JOBS 4 CACHE INT "Number of build jobs '-j <n>'")
-set(DEFAULT_BUILD_COMMAND ${CMAKE_COMMAND} --build . --parallel ${NUM_BUILD_JOBS})
+set(DEFAULT_BUILD_COMMAND make -j ${NUM_BUILD_JOBS})
 
 ## ISPC ##
 
