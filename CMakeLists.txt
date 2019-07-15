@@ -27,6 +27,9 @@ project(SuperbuildTest)
 include(ExternalProject)
 set(installDir ${CMAKE_INSTALL_PREFIX})
 
+set(NUM_BUILD_JOBS 4 CACHE INT "Number of build jobs '-j <n>'")
+set(DEFAULT_BUILD_COMMAND ${CMAKE_COMMAND} --build . --parallel ${NUM_BUILD_JOBS})
+
 ## ISPC ##
 
 ExternalProject_Add(ispc
@@ -47,13 +50,13 @@ ExternalProject_Add(tbb
   PREFIX tbb
   INSTALL_DIR ${installDir}/tbb
   URL "https://github.com/wjakob/tbb/archive/master.zip"
-  CMAKE_GENERATOR Ninja
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -DCMAKE_BUILD_TYPE=Release
     -DTBB_BUILD_TESTS=OFF
     -DTBB_BUILD_SHARED=ON
     -DTBB_BUILD_STATIC=OFF
+  BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
   BUILD_ALWAYS OFF
 )
 
@@ -63,7 +66,6 @@ ExternalProject_Add(embree
   PREFIX embree
   INSTALL_DIR ${installDir}/embree
   URL "https://github.com/embree/embree/archive/master.zip"
-  CMAKE_GENERATOR Ninja
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -DEMBREE_TUTORIALS=OFF
@@ -71,6 +73,7 @@ ExternalProject_Add(embree
     -DEMBREE_ISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
     -DCMAKE_BUILD_TYPE=Release
     -DBUILD_TESTING=OFF
+  BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
   BUILD_ALWAYS OFF
 )
 
@@ -82,12 +85,12 @@ ExternalProject_Add(ospray
   PREFIX ospray
   INSTALL_DIR ${installDir}/ospray
   URL "https://github.com/ospray/ospray/archive/devel.zip"
-  CMAKE_GENERATOR Ninja
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>/ospray
     -Dembree_DIR:PATH=<INSTALL_DIR>/embree/lib64/cmake
     -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
     -DCMAKE_BUILD_TYPE=Release
+  BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
   BUILD_ALWAYS OFF
 )
 
