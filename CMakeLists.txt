@@ -93,6 +93,7 @@ ExternalProject_Add(ospray
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-${BUILD_EMBREE_VERSION}
     -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
+    -DTBB_ROOT=${installDir}/tbb
     -DCMAKE_BUILD_TYPE=Release
   BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
   BUILD_ALWAYS OFF
