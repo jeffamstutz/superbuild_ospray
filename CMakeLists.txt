@@ -28,7 +28,7 @@ include(ExternalProject)
 set(installDir ${CMAKE_INSTALL_PREFIX})
 
 # Options
-set(NUM_BUILD_JOBS 4 CACHE INT "Number of build jobs '-j <n>'")
+set(NUM_BUILD_JOBS 4 CACHE STRING "Number of build jobs '-j <n>'")
 set(BUILD_EMBREE_VERSION "3.5.2" CACHE STRING "Which version of Embree to build?")
 set(BUILD_OSPRAY_BRANCH "devel" CACHE STRING "Which branch of OSPRay to build?")
 
@@ -88,7 +88,7 @@ ExternalProject_Add_StepDependencies(embree configure ispc tbb)
 ExternalProject_Add(ospray
   PREFIX ospray
   INSTALL_DIR ${installDir}/ospray
-  URL "https://github.com/ospray/ospray/archive/devel.zip"
+  URL "https://github.com/ospray/ospray/archive/${BUILD_OSPRAY_BRANCH}.zip"
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-${BUILD_EMBREE_VERSION}
