@@ -91,6 +91,8 @@ ExternalProject_Add_StepDependencies(embree configure ispc tbb)
 
 ## OSPRay ##
 
+set(ENV{TBB_ROOT} ${installDir}/tbb)
+
 ExternalProject_Add(ospray
   PREFIX ospray
   INSTALL_DIR ${installDir}/ospray
@@ -99,10 +101,9 @@ ExternalProject_Add(ospray
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-${BUILD_EMBREE_VERSION}
     -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
-    -DTBB_ROOT=${installDir}/tbb
     -DTBB_INCLUDE_DIR=${installDir}/tbb/include
     -DTBB_LIBRARY=${installDir}/tbb/lib/libtbb${CMAKE_SHARED_LIBRARY_SUFFIX}
-    -DTBB_LIBRARY_MALLOC=${installDir}/tbb/lib/libtbb_malloc${CMAKE_SHARED_LIBRARY_SUFFIX}
+    -DTBB_LIBRARY_MALLOC=${installDir}/tbb/lib/libtbbmalloc${CMAKE_SHARED_LIBRARY_SUFFIX}
     -DCMAKE_BUILD_TYPE=Release
   BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
   BUILD_ALWAYS OFF
