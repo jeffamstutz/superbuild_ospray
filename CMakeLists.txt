@@ -87,7 +87,7 @@ ExternalProject_Add(ospray
   URL "https://github.com/ospray/ospray/archive/devel.zip"
   CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>/ospray
-    -Dembree_DIR:PATH=<INSTALL_DIR>/embree/lib64/cmake/embree-3.5.2
+    -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-3.5.2
     -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
     -DCMAKE_BUILD_TYPE=Release
   BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
