@@ -31,6 +31,7 @@ set(installDir ${CMAKE_INSTALL_PREFIX})
 set(NUM_BUILD_JOBS 4 CACHE STRING "Number of build jobs '-j <n>'")
 set(BUILD_EMBREE_VERSION "3.5.2" CACHE STRING "Which version of Embree to build?")
 set(BUILD_OSPRAY_BRANCH "devel" CACHE STRING "Which branch of OSPRay to build?")
+option(BUILD_DEPENDENCIES_ONLY "Don't build OSPRay itself, only deps" OFF)
 
 set(DEFAULT_BUILD_COMMAND make -j ${NUM_BUILD_JOBS})
 
@@ -91,22 +92,24 @@ ExternalProject_Add_StepDependencies(embree configure ispc tbb)
 
 ## OSPRay ##
 
-set(ENV{TBB_ROOT} ${installDir}/tbb)
+if (BUILD_DEPENDENCIES_ONLY)
+  set(ENV{TBB_ROOT} ${installDir}/tbb)
 
-ExternalProject_Add(ospray
-  PREFIX ospray
-  INSTALL_DIR ${installDir}/ospray
-  URL "https://github.com/ospray/ospray/archive/${BUILD_OSPRAY_BRANCH}.zip"
-  CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-    -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-${BUILD_EMBREE_VERSION}
-    -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
-    -DTBB_INCLUDE_DIR=${installDir}/tbb/include
-    -DTBB_LIBRARY=${installDir}/tbb/lib/libtbb${CMAKE_SHARED_LIBRARY_SUFFIX}
-    -DTBB_LIBRARY_MALLOC=${installDir}/tbb/lib/libtbbmalloc${CMAKE_SHARED_LIBRARY_SUFFIX}
-    -DCMAKE_BUILD_TYPE=Release
-  BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
-  BUILD_ALWAYS OFF
-)
+  ExternalProject_Add(ospray
+    PREFIX ospray
+    INSTALL_DIR ${installDir}/ospray
+    URL "https://github.com/ospray/ospray/archive/${BUILD_OSPRAY_BRANCH}.zip"
+    CMAKE_ARGS
+      -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+      -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-${BUILD_EMBREE_VERSION}
+      -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
+      -DTBB_INCLUDE_DIR=${installDir}/tbb/include
+      -DTBB_LIBRARY=${installDir}/tbb/lib/libtbb${CMAKE_SHARED_LIBRARY_SUFFIX}
+      -DTBB_LIBRARY_MALLOC=${installDir}/tbb/lib/libtbbmalloc${CMAKE_SHARED_LIBRARY_SUFFIX}
+      -DCMAKE_BUILD_TYPE=Release
+    BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
+    BUILD_ALWAYS OFF
+  )
 
-ExternalProject_Add_StepDependencies(ospray configure embree)
+  ExternalProject_Add_StepDependencies(ospray configure embree)
+endif()
