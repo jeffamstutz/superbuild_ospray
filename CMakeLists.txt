@@ -36,10 +36,16 @@ set(DEFAULT_BUILD_COMMAND make -j ${NUM_BUILD_JOBS})
 
 ## ISPC ##
 
+if (APPLE)
+  set(ISPC_URL http://sdvis.org/ospray/download/dependencies/osx/ispc-v1.10.0-osx.tar.gz)
+else()
+  set(ISPC_URL http://sdvis.org/ospray/download/dependencies/linux/ispc-v1.10.0-linux.tar.gz)
+endif()
+
 ExternalProject_Add(ispc
   PREFIX ispc
   INSTALL_DIR ${installDir}/
-  URL http://sdvis.org/ospray/download/dependencies/linux/ispc-v1.10.0-linux.tar.gz
+  URL ${ISPC_URL}
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
   INSTALL_COMMAND "${CMAKE_COMMAND}" -E copy_if_different
