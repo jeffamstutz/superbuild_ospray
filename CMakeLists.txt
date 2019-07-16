@@ -25,6 +25,7 @@ endif()
 project(SuperbuildTest)
 
 include(ExternalProject)
+include(GNUInstallDirs)
 set(installDir ${CMAKE_INSTALL_PREFIX})
 
 # Options
@@ -34,19 +35,24 @@ set(BUILD_OIDN_VERSION "0.9.0" CACHE STRING "Which version of OpenImageDenoise t
 set(BUILD_OSPRAY_BRANCH "devel" CACHE STRING "Which branch of OSPRay to build?")
 option(BUILD_DEPENDENCIES_ONLY "Don't build OSPRay itself, only deps" OFF)
 
-set(DEFAULT_BUILD_COMMAND make -j ${NUM_BUILD_JOBS})
+set(DEFAULT_BUILD_COMMAND cmake --build . --config release -j ${NUM_BUILD_JOBS})
 
 ## ISPC ##
 
 if (APPLE)
   set(ISPC_URL http://sdvis.org/ospray/download/dependencies/osx/ispc-v1.10.0-osx.tar.gz)
+elseif(WIN32)
+  set(ISPC_URL http://sdvis.org/ospray/download/dependencies/win/ispc-v1.10.0-windows.zip)
 else()
   set(ISPC_URL http://sdvis.org/ospray/download/dependencies/linux/ispc-v1.10.0-linux.tar.gz)
 endif()
 
+get_filename_component(INSTALL_DIR_ABSOLUTE
+  ${installDir} ABSOLUTE BASE_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
 ExternalProject_Add(ispc
   PREFIX ispc
-  INSTALL_DIR ${installDir}/
+  INSTALL_DIR ${INSTALL_DIR_ABSOLUTE}/
   URL ${ISPC_URL}
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
@@ -56,6 +62,8 @@ ExternalProject_Add(ispc
   BUILD_ALWAYS OFF
 )
 
+set(ISPC_PATH "${INSTALL_DIR_ABSOLUTE}/ispc/bin/ispc${CMAKE_EXECUTABLE_SUFFIX}")
+
 ## TBB ##
 
 ExternalProject_Add(tbb
@@ -64,7 +72,7 @@ ExternalProject_Add(tbb
   STAMP_DIR tbb/stamp
   SOURCE_DIR tbb/src
   BINARY_DIR tbb/build
-  INSTALL_DIR ${installDir}/tbb
+  INSTALL_DIR ${INSTALL_DIR_ABSOLUTE}/tbb
   URL "https://github.com/wjakob/tbb/archive/master.zip"
   CMAKE_ARGS
     -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
@@ -78,6 +86,8 @@ ExternalProject_Add(tbb
   BUILD_ALWAYS OFF
 )
 
+set(TBB_ROOT "${INSTALL_DIR_ABSOLUTE}/tbb")
+
 ## Embree ##
 
 ExternalProject_Add(embree
@@ -86,20 +96,25 @@ ExternalProject_Add(embree
   STAMP_DIR embree/stamp
   SOURCE_DIR embree/src
   BINARY_DIR embree/build
-  INSTALL_DIR ${installDir}/embree
+  INSTALL_DIR ${INSTALL_DIR_ABSOLUTE}/embree
   URL "https://github.com/embree/embree/archive/v${BUILD_EMBREE_VERSION}.zip"
   CMAKE_ARGS
     -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
     -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -DEMBREE_TUTORIALS=OFF
-    -DEMBREE_TBB_ROOT=${installDir}/tbb
-    -DEMBREE_ISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
+    -DEMBREE_TBB_ROOT=${TBB_ROOT}
+    -DEMBREE_ISPC_EXECUTABLE=${ISPC_PATH}
     -DCMAKE_BUILD_TYPE=Release
     -DBUILD_TESTING=OFF
   BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
   BUILD_ALWAYS OFF
 )
+
+set(EMBREE_PATH "${INSTALL_DIR_ABSOLUTE}/embree")
+if (NOT WIN32)
+  set(EMBREE_PATH "${EMBREE_PATH}/${CMAKE_INSTALL_LIBDIR}/cmake/embree-${BUILD_EMBREE_VERSION}")
+endif()
 
 ExternalProject_Add_StepDependencies(embree configure ispc tbb)
 
@@ -111,7 +126,7 @@ ExternalProject_Add(oidn
   STAMP_DIR oidn/stamp
   SOURCE_DIR oidn/src
   BINARY_DIR oidn/build
-  INSTALL_DIR ${installDir}/OpenImageDenoise
+  INSTALL_DIR ${INSTALL_DIR_ABSOLUTE}/OpenImageDenoise
   GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn
   GIT_TAG v${BUILD_OIDN_VERSION}
   GIT_SHALLOW ON
@@ -120,21 +135,17 @@ ExternalProject_Add(oidn
     -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -DCMAKE_BUILD_TYPE=Release
-    -DTBB_ROOT=${installDir}/tbb
-    -DTBB_INCLUDE_DIR=${installDir}/tbb/include
-    -DTBB_LIBRARY=${installDir}/tbb/lib/libtbb${CMAKE_SHARED_LIBRARY_SUFFIX}
-    -DTBB_LIBRARY_MALLOC=${installDir}/tbb/lib/libtbbmalloc${CMAKE_SHARED_LIBRARY_SUFFIX}
+    -DTBB_ROOT=${TBB_ROOT}
   BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
   BUILD_ALWAYS OFF
 )
 
-ExternalProject_Add_StepDependencies(oidn configure tbb)
+ExternalProject_Add_StepDependencies(oidn configure tbb ispc)
 
 ## OSPRay ##
 
 if (NOT BUILD_DEPENDENCIES_ONLY)
-
-  set(ENV{TBB_ROOT} ${installDir}/tbb)
+  set(ENV{TBB_ROOT} ${TBB_ROOT})
 
   ExternalProject_Add(ospray
     PREFIX ospray
@@ -142,18 +153,15 @@ if (NOT BUILD_DEPENDENCIES_ONLY)
     STAMP_DIR ospray/stamp
     SOURCE_DIR ospray/src
     BINARY_DIR ospray/build
-    INSTALL_DIR ${installDir}/ospray
+    INSTALL_DIR ${INSTALL_DIR_ABSOLUTE}/ospray
     URL "https://github.com/ospray/ospray/archive/${BUILD_OSPRAY_BRANCH}.zip"
     CMAKE_ARGS
       -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
       -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-      -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-${BUILD_EMBREE_VERSION}
-      -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
-      -DTBB_ROOT=${installDir}/tbb
-      -DTBB_INCLUDE_DIR=${installDir}/tbb/include
-      -DTBB_LIBRARY=${installDir}/tbb/lib/libtbb${CMAKE_SHARED_LIBRARY_SUFFIX}
-      -DTBB_LIBRARY_MALLOC=${installDir}/tbb/lib/libtbbmalloc${CMAKE_SHARED_LIBRARY_SUFFIX}
+      -Dembree_DIR:PATH=${EMBREE_PATH}
+      -DTBB_ROOT=${TBB_ROOT}
+      -DISPC_EXECUTABLE=${ISPC_PATH}
       -DCMAKE_BUILD_TYPE=Release
     BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
     BUILD_ALWAYS OFF
