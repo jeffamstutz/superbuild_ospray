@@ -92,7 +92,7 @@ ExternalProject_Add_StepDependencies(embree configure ispc tbb)
 
 ## OSPRay ##
 
-if (BUILD_DEPENDENCIES_ONLY)
+if (NOT BUILD_DEPENDENCIES_ONLY)
   set(ENV{TBB_ROOT} ${installDir}/tbb)
 
   ExternalProject_Add(ospray
