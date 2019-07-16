@@ -59,6 +59,10 @@ ExternalProject_Add(ispc
 
 ExternalProject_Add(tbb
   PREFIX tbb
+  DOWNLOAD_DIR tbb
+  STAMP_DIR tbb/stamp
+  SOURCE_DIR tbb/src
+  BINARY_DIR tbb/build
   INSTALL_DIR ${installDir}/tbb
   URL "https://github.com/wjakob/tbb/archive/master.zip"
   CMAKE_ARGS
@@ -77,6 +81,10 @@ ExternalProject_Add(tbb
 
 ExternalProject_Add(embree
   PREFIX embree
+  DOWNLOAD_DIR embree
+  STAMP_DIR embree/stamp
+  SOURCE_DIR embree/src
+  BINARY_DIR embree/build
   INSTALL_DIR ${installDir}/embree
   URL "https://github.com/embree/embree/archive/v${BUILD_EMBREE_VERSION}.zip"
   CMAKE_ARGS
@@ -101,6 +109,10 @@ if (NOT BUILD_DEPENDENCIES_ONLY)
 
   ExternalProject_Add(ospray
     PREFIX ospray
+    DOWNLOAD_DIR ospray
+    STAMP_DIR ospray/stamp
+    SOURCE_DIR ospray/src
+    BINARY_DIR ospray/build
     INSTALL_DIR ${installDir}/ospray
     URL "https://github.com/ospray/ospray/archive/${BUILD_OSPRAY_BRANCH}.zip"
     CMAKE_ARGS
