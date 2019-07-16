@@ -62,6 +62,8 @@ ExternalProject_Add(tbb
   INSTALL_DIR ${installDir}/tbb
   URL "https://github.com/wjakob/tbb/archive/master.zip"
   CMAKE_ARGS
+    -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+    -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -DCMAKE_BUILD_TYPE=Release
     -DTBB_BUILD_TESTS=OFF
@@ -78,6 +80,8 @@ ExternalProject_Add(embree
   INSTALL_DIR ${installDir}/embree
   URL "https://github.com/embree/embree/archive/v${BUILD_EMBREE_VERSION}.zip"
   CMAKE_ARGS
+    -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+    -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
     -DEMBREE_TUTORIALS=OFF
     -DEMBREE_TBB_ROOT=${installDir}/tbb
@@ -100,6 +104,8 @@ if (NOT BUILD_DEPENDENCIES_ONLY)
     INSTALL_DIR ${installDir}/ospray
     URL "https://github.com/ospray/ospray/archive/${BUILD_OSPRAY_BRANCH}.zip"
     CMAKE_ARGS
+      -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+      -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
       -Dembree_DIR:PATH=${installDir}/embree/lib64/cmake/embree-${BUILD_EMBREE_VERSION}
       -DISPC_EXECUTABLE=${installDir}/ispc/bin/ispc
