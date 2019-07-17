@@ -30,6 +30,7 @@ set(installDir ${CMAKE_INSTALL_PREFIX})
 # Options
 set(NUM_BUILD_JOBS 4 CACHE STRING "Number of build jobs '-j <n>'")
 set(BUILD_EMBREE_VERSION "3.5.2" CACHE STRING "Which version of Embree to build?")
+set(BUILD_OIDN_VERSION "0.9.0" CACHE STRING "Which version of OpenImageDenoise to build?")
 set(BUILD_OSPRAY_BRANCH "devel" CACHE STRING "Which branch of OSPRay to build?")
 option(BUILD_DEPENDENCIES_ONLY "Don't build OSPRay itself, only deps" OFF)
 
@@ -102,10 +103,36 @@ ExternalProject_Add(embree
 
 ExternalProject_Add_StepDependencies(embree configure ispc tbb)
 
+## OpenImageDenoise ##
+
+set(ENV{TBB_ROOT} ${installDir}/tbb)
+
+ExternalProject_Add(oidn
+  PREFIX oidn
+  DOWNLOAD_DIR oidn
+  STAMP_DIR oidn/stamp
+  SOURCE_DIR oidn/src
+  BINARY_DIR oidn/build
+  INSTALL_DIR ${installDir}/OpenImageDenoise
+  GIT_REPOSITORY https://github.com/OpenImageDenoise/oidn
+  GIT_TAG v${BUILD_OIDN_VERSION}
+  GIT_SHALLOW ON
+  CMAKE_ARGS
+    -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+    -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+    -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+    -DCMAKE_BUILD_TYPE=Release
+    -DTBB_LIBRARY=${installDir}/tbb/lib/libtbb${CMAKE_SHARED_LIBRARY_SUFFIX}
+    -DTBB_LIBRARY_MALLOC=${installDir}/tbb/lib/libtbbmalloc${CMAKE_SHARED_LIBRARY_SUFFIX}
+  BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
+  BUILD_ALWAYS OFF
+)
+
+ExternalProject_Add_StepDependencies(oidn configure tbb)
+
 ## OSPRay ##
 
 if (NOT BUILD_DEPENDENCIES_ONLY)
-  set(ENV{TBB_ROOT} ${installDir}/tbb)
 
   ExternalProject_Add(ospray
     PREFIX ospray
