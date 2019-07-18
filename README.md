@@ -23,5 +23,3 @@ CMake options to note (all have sensible defaults):
 - `BUILD_EMBREE_VERSION` determines which verison of Embree to pull down.
 - `BUILD_OSPRAY_BRANCH` selects which branch of OSPRay to build.
 
-NOTE: This has only been tested on Linux. It ought to work on macOS, but
-likely doesn't work on Windows (yet).
