@@ -35,7 +35,11 @@ set(BUILD_OIDN_VERSION "0.9.0" CACHE STRING "Which version of OpenImageDenoise t
 set(BUILD_OSPRAY_BRANCH "devel" CACHE STRING "Which branch of OSPRay to build?")
 option(BUILD_DEPENDENCIES_ONLY "Don't build OSPRay itself, only deps" OFF)
 
-set(DEFAULT_BUILD_COMMAND cmake --build . --config release -j ${NUM_BUILD_JOBS})
+if (${CMAKE_MINOR_VERSION} GREATER_EQUAL 12)
+  set(PARALLEL_JOBS_OPTS -j ${NUM_BUILD_JOBS})
+endif()
+
+set(DEFAULT_BUILD_COMMAND cmake --build . --config release ${PARALLEL_JOBS_OPTS})
 
 ## ISPC ##
 
