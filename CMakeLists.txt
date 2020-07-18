@@ -29,18 +29,25 @@ get_filename_component(INSTALL_DIR_ABSOLUTE
 
 ## Build projects ##
 
+include(get_tbb.cmake)
+include(get_ispc.cmake)
+
 build_subproject(
   NAME rkcommon
   URL "https://github.com/ospray/rkcommon/archive/v1.4.2.zip"
   BUILD_ARGS
+    -DTBB_ROOT=${INSTALL_DIR_ABSOLUTE}
     -DINSTALL_DEPS=OFF
     -DBUILD_TESTING=OFF
+  DEPENDS_ON tbb ispc
 )
 
 build_subproject(
   NAME embree
   URL "https://github.com/embree/embree/archive/v3.11.0.zip"
   BUILD_ARGS
+    -DTBB_ROOT=${INSTALL_DIR_ABSOLUTE}
+    -DISPC_EXECUTABLE=${ISPC_PATH}
     -DEMBREE_TUTORIALS=OFF
     -DBUILD_TESTING=OFF
   DEPENDS_ON rkcommon
@@ -50,6 +57,8 @@ build_subproject(
   NAME openvkl
   URL "https://github.com/openvkl/openvkl/archive/v0.10.0.zip"
   BUILD_ARGS
+    -DTBB_ROOT=${INSTALL_DIR_ABSOLUTE}
+    -DISPC_EXECUTABLE=${ISPC_PATH}
     -DBUILD_BENCHMARKS=OFF
     -DBUILD_EXAMPLES=OFF
     -DBUILD_TESTING=OFF
@@ -60,6 +69,8 @@ build_subproject(
   NAME oidn
   URL "https://github.com/OpenImageDenoise/oidn/releases/download/v1.2.2/oidn-1.2.2.src.zip"
   BUILD_ARGS
+    -DTBB_ROOT=${INSTALL_DIR_ABSOLUTE}
+    -DISPC_EXECUTABLE=${ISPC_PATH}
     -DOIDN_APPS=OFF
   DEPENDS_ON rkcommon
 )
@@ -68,6 +79,8 @@ build_subproject(
   NAME ospray
   URL "https://github.com/ospray/ospray/archive/v2.2.0.zip"
   BUILD_ARGS
+    -DTBB_ROOT=${INSTALL_DIR_ABSOLUTE}
+    -DISPC_EXECUTABLE=${ISPC_PATH}
     -DOSPRAY_BUILD_ISA=ALL
     -DOSPRAY_ENABLE_TESTING=OFF
     -DOSPRAY_MODULE_BILINEAR_PATCH=OFF
