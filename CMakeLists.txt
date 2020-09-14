@@ -34,7 +34,7 @@ include(get_ispc.cmake)
 
 build_subproject(
   NAME rkcommon
-  URL "https://github.com/ospray/rkcommon/archive/v1.4.2.zip"
+  URL "https://github.com/ospray/rkcommon/archive/v1.5.0.zip"
   BUILD_ARGS
     -DTBB_ROOT=${INSTALL_DIR_ABSOLUTE}
     -DINSTALL_DEPS=OFF
@@ -67,7 +67,7 @@ build_subproject(
 
 build_subproject(
   NAME oidn
-  URL "https://github.com/OpenImageDenoise/oidn/releases/download/v1.2.2/oidn-1.2.2.src.zip"
+  URL "https://github.com/OpenImageDenoise/oidn/releases/download/v1.2.3/oidn-1.2.3.src.zip"
   BUILD_ARGS
     -DTBB_ROOT=${INSTALL_DIR_ABSOLUTE}
     -DISPC_EXECUTABLE=${ISPC_PATH}
@@ -77,12 +77,11 @@ build_subproject(
 
 build_subproject(
   NAME ospray
-  URL "https://github.com/ospray/ospray/archive/v2.2.0.zip"
+  URL "https://github.com/ospray/ospray/archive/v2.3.0.zip"
   BUILD_ARGS
     -DTBB_ROOT=${INSTALL_DIR_ABSOLUTE}
     -DISPC_EXECUTABLE=${ISPC_PATH}
     -DOSPRAY_BUILD_ISA=ALL
-    -DOSPRAY_ENABLE_TESTING=OFF
     -DOSPRAY_MODULE_BILINEAR_PATCH=OFF
     -DOSPRAY_MODULE_DENOISER=ON
     -DOSPRAY_ENABLE_APPS=OFF

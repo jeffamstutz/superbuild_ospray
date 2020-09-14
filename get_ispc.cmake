@@ -1,17 +1,19 @@
 ## Copyright 2020 Jefferson Amstutz
 ## SPDX-License-Identifier: Unlicense
 
-set(SUBPROJECT_NAME ispc-v1.12.0)
+set(SUBPROJECT_NAME ispc-v1.14.1)
 
 set(SUBPROJECT_PATH ${INSTALL_DIR_ABSOLUTE})
 
 if (APPLE)
-  set(ISPC_URL http://sdvis.org/ospray/download/dependencies/osx/ispc-v1.12.0-macOS.tar.gz)
+  set(ISPC_SUFFIX "macOS.tar.gz")
 elseif(WIN32)
-  set(ISPC_URL http://sdvis.org/ospray/download/dependencies/win/ispc-v1.12.0-windows.zip)
+  set(ISPC_SUFFIX "windows.zip")
 else()
-  set(ISPC_URL http://sdvis.org/ospray/download/dependencies/linux/ispc-v1.12.0-linux.tar.gz)
+  set(ISPC_SUFFIX "linux.tar.gz")
 endif()
+
+set(ISPC_URL "https://github.com/ispc/ispc/releases/download/v1.14.1/ispc-v1.14.1-${ISPC_SUFFIX}")
 
 ExternalProject_Add(ispc
   PREFIX ${SUBPROJECT_NAME}
