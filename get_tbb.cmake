@@ -21,9 +21,9 @@ ExternalProject_Add(tbb
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
   INSTALL_COMMAND "${CMAKE_COMMAND}" -E copy_directory
-    <SOURCE_DIR>/tbb/lib
+    <SOURCE_DIR>/tbb/lib/intel64/gcc4.8
     ${INSTALL_DIR_ABSOLUTE}/lib
   BUILD_ALWAYS OFF
 )
 
-set(TBB_PATH "${SUBPROJECT_NAME}/unpacked")
+set(TBB_PATH "${CMAKE_BINARY_DIR}/${SUBPROJECT_NAME}/unpacked/tbb")

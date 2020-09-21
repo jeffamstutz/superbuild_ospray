@@ -1,6 +1,12 @@
 ## Copyright 2020 Jefferson Amstutz
 ## SPDX-License-Identifier: Unlicense
 
+function(print)
+  foreach(arg ${ARGN})
+    message("${arg} = ${${arg}}")
+  endforeach()
+endfunction()
+
 macro(append_cmake_prefix_path)
   list(APPEND CMAKE_PREFIX_PATH ${ARGN})
   string(REPLACE ";" "|" CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}")
