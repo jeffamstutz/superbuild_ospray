@@ -34,7 +34,7 @@ include(get_ispc.cmake)
 
 build_subproject(
   NAME rkcommon
-  URL "https://github.com/ospray/rkcommon/archive/v1.5.0.zip"
+  URL "https://github.com/ospray/rkcommon/archive/v1.5.1.zip"
   BUILD_ARGS
     -DTBB_ROOT=${TBB_PATH}
     -DINSTALL_DEPS=OFF
@@ -44,7 +44,7 @@ build_subproject(
 
 build_subproject(
   NAME embree
-  URL "https://github.com/embree/embree/archive/v3.11.0.zip"
+  URL "https://github.com/embree/embree/archive/v3.12.0.zip"
   BUILD_ARGS
     -DTBB_ROOT=${TBB_PATH}
     -DISPC_EXECUTABLE=${ISPC_PATH}
@@ -55,7 +55,7 @@ build_subproject(
 
 build_subproject(
   NAME openvkl
-  URL "https://github.com/openvkl/openvkl/archive/v0.10.0.zip"
+  URL "https://github.com/openvkl/openvkl/archive/v0.11.0.zip"
   BUILD_ARGS
     -DTBB_ROOT=${TBB_PATH}
     -DISPC_EXECUTABLE=${ISPC_PATH}
@@ -67,7 +67,7 @@ build_subproject(
 
 build_subproject(
   NAME oidn
-  URL "https://github.com/OpenImageDenoise/oidn/releases/download/v1.2.3/oidn-1.2.3.src.zip"
+  URL "https://github.com/OpenImageDenoise/oidn/releases/download/v1.2.4/oidn-1.2.4.src.zip"
   BUILD_ARGS
     -DTBB_ROOT=${TBB_PATH}
     -DISPC_EXECUTABLE=${ISPC_PATH}
@@ -77,7 +77,7 @@ build_subproject(
 
 build_subproject(
   NAME ospray
-  URL "https://github.com/ospray/ospray/archive/v2.3.0.zip"
+  URL "https://github.com/ospray/ospray/archive/v2.4.0.zip"
   BUILD_ARGS
     -DTBB_ROOT=${TBB_PATH}
     -DISPC_EXECUTABLE=${ISPC_PATH}
