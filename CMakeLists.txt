@@ -22,6 +22,8 @@ include(macros.cmake)
 ProcessorCount(PROCESSOR_COUNT)
 set(NUM_BUILD_JOBS ${PROCESSOR_COUNT} CACHE STRING "Number of build jobs '-j <n>'")
 
+option(BUILD_OSPRAY "Build OSPRay (ON) or just dependencies (OFF)" ON)
+
 set(DEFAULT_BUILD_COMMAND cmake --build . --config release -j ${NUM_BUILD_JOBS})
 
 get_filename_component(INSTALL_DIR_ABSOLUTE
@@ -75,17 +77,19 @@ build_subproject(
   DEPENDS_ON rkcommon
 )
 
-build_subproject(
-  NAME ospray
-  URL "https://github.com/ospray/ospray/archive/v2.5.0.zip"
-  BUILD_ARGS
-    -DTBB_ROOT=${TBB_PATH}
-    -DISPC_EXECUTABLE=${ISPC_PATH}
-    -DOSPRAY_BUILD_ISA=ALL
-    -DOSPRAY_MODULE_BILINEAR_PATCH=OFF
-    -DOSPRAY_MODULE_DENOISER=ON
-    -DOSPRAY_ENABLE_APPS=OFF
-    -DOSPRAY_STRICT_BUILD=OFF
-    -DOSPRAY_INSTALL_DEPENDENCIES=OFF
-  DEPENDS_ON rkcommon openvkl embree oidn
-)
+if (BUILD_OSPRAY)
+  build_subproject(
+    NAME ospray
+    URL "https://github.com/ospray/ospray/archive/v2.5.0.zip"
+    BUILD_ARGS
+      -DTBB_ROOT=${TBB_PATH}
+      -DISPC_EXECUTABLE=${ISPC_PATH}
+      -DOSPRAY_BUILD_ISA=ALL
+      -DOSPRAY_MODULE_BILINEAR_PATCH=OFF
+      -DOSPRAY_MODULE_DENOISER=ON
+      -DOSPRAY_ENABLE_APPS=OFF
+      -DOSPRAY_STRICT_BUILD=OFF
+      -DOSPRAY_INSTALL_DEPENDENCIES=OFF
+    DEPENDS_ON rkcommon openvkl embree oidn
+  )
+endif()
