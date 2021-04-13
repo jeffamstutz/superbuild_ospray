@@ -1,7 +1,8 @@
 ## Copyright 2020 Jefferson Amstutz
 ## SPDX-License-Identifier: Unlicense
 
-set(SUBPROJECT_NAME ispc-v1.14.1)
+set(ISPC_VERSION "1.15.0")
+set(SUBPROJECT_NAME ispc-v${ISPC_VERSION})
 
 set(SUBPROJECT_PATH ${INSTALL_DIR_ABSOLUTE})
 
@@ -13,7 +14,7 @@ else()
   set(ISPC_SUFFIX "linux.tar.gz")
 endif()
 
-set(ISPC_URL "https://github.com/ispc/ispc/releases/download/v1.14.1/ispc-v1.14.1-${ISPC_SUFFIX}")
+set(ISPC_URL "https://github.com/ispc/ispc/releases/download/v${ISPC_VERSION}/ispc-v${ISPC_VERSION}-${ISPC_SUFFIX}")
 
 ExternalProject_Add(ispc
   PREFIX ${SUBPROJECT_NAME}
