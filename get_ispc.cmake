@@ -30,4 +30,4 @@ ExternalProject_Add(ispc
   BUILD_ALWAYS OFF
 )
 
-set(ISPC_PATH "${INSTALL_DIR_ABSOLUTE}/bin/ispc${CMAKE_EXECUTABLE_SUFFIX}")
+append_cmake_prefix_path("${INSTALL_DIR_ABSOLUTE}/bin/ispc${CMAKE_EXECUTABLE_SUFFIX}")

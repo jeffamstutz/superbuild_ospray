@@ -32,4 +32,4 @@ ExternalProject_Add(tbb
   BUILD_ALWAYS OFF
 )
 
-set(TBB_PATH "${CMAKE_BINARY_DIR}/${SUBPROJECT_NAME}/unpacked/tbb")
+append_cmake_prefix_path("${CMAKE_BINARY_DIR}/${SUBPROJECT_NAME}/unpacked/tbb")
