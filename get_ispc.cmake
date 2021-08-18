@@ -1,7 +1,7 @@
 ## Copyright 2020 Jefferson Amstutz
 ## SPDX-License-Identifier: Unlicense
 
-set(ISPC_VERSION "1.15.0")
+set(ISPC_VERSION "1.16.0")
 set(SUBPROJECT_NAME ispc-v${ISPC_VERSION})
 
 set(SUBPROJECT_PATH ${INSTALL_DIR_ABSOLUTE})
