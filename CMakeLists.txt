@@ -73,7 +73,7 @@ build_subproject(
 if (BUILD_OSPRAY)
   build_subproject(
     NAME ospray
-    URL "https://github.com/ospray/ospray/archive/v2.8.0.zip"
+    URL "https://github.com/ospray/ospray/archive/refs/heads/devel.zip"
     BUILD_ARGS
       -DOSPRAY_BUILD_ISA=ALL
       -DOSPRAY_MODULE_BILINEAR_PATCH=OFF
