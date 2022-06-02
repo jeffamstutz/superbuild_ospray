@@ -33,3 +33,5 @@ ExternalProject_Add(tbb
 )
 
 append_cmake_prefix_path("${CMAKE_BINARY_DIR}/${SUBPROJECT_NAME}/unpacked/tbb")
+
+set(TBB_TARGET tbb)

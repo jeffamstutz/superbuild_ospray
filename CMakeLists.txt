@@ -24,12 +24,16 @@ set(NUM_BUILD_JOBS ${PROCESSOR_COUNT} CACHE STRING "Number of build jobs '-j <n>
 
 set(DEFAULT_BUILD_COMMAND cmake --build . --config release -j ${NUM_BUILD_JOBS})
 
+option(DOWNLOAD_TBB "Download TBB, otherwise rely on system" ON)
+
 ## Build OSPRay dependencies ##
 
 get_filename_component(INSTALL_DIR_ABSOLUTE
   ${CMAKE_BINARY_DIR}/local_deps ABSOLUTE BASE_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
-include(get_tbb.cmake)
+if (DOWNLOAD_TBB)
+  include(get_tbb.cmake)
+endif()
 include(get_ispc.cmake)
 
 build_subproject(
@@ -38,7 +42,7 @@ build_subproject(
   BUILD_ARGS
     -DINSTALL_DEPS=OFF
     -DBUILD_TESTING=OFF
-  DEPENDS_ON tbb ispc
+  DEPENDS_ON ${TBB_TARGET} ispc
 )
 
 build_subproject(
